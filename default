@@ -1,0 +1,52 @@
+server {
+    listen   80;
+ 
+    index index.php index.html index.htm;
+    set $root_path '/var/www/app/public';
+    root $root_path;
+
+    charset UTF-8;
+
+    gzip on;
+    gzip_http_version 1.1;
+    gzip_vary on;
+    gzip_comp_level 6;
+    gzip_proxied any;
+    gzip_types text/plain text/xml text/css application/x-javascript;
+
+    server_name _;
+
+    try_files $uri $uri/ @rewrite;
+
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
+    }
+
+    location ~ \.php {
+        fastcgi_index /index.php;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        include fastcgi_params;
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        fastcgi_param PATH_INFO       $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~ \.css {
+        add_header  Content-Type    text/css;
+    }
+
+    location ~ \.js {
+        add_header  Content-Type    application/x-javascript;
+    }
+
+    # location ~* ^/(css|img|js|flv|swf|download)/(.+)$ {
+    # location ~* ^/(css|img|flv|swf|download)/(.+)$ {
+    #     root $root_path;
+    # }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+}

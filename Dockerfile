@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -y install \
   php5-pgsql \
   php5-redis
 
-RUN git clone --depth=1 --branch phalcon-v2.0.8 http://github.com/phalcon/cphalcon.git cphalcon
+RUN git clone --depth=1 --branch phalcon-v2.0.10 http://github.com/phalcon/cphalcon.git cphalcon
 RUN cd cphalcon/build && ./install;
 
 RUN echo '[phalcon] extension = phalcon.so' >> /etc/php5/fpm/conf.d/50-phalcon.ini
